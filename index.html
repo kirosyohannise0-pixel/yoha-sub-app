@@ -1,77 +1,300 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sub4Sub Mini App</title>
+    <title>Sub4Sub Real-time Reciprocal Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --success-color: #10b981;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --lock-color: #ef4444;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #0f172a;
-            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
         }
+
         .container {
-            background-color: #1e293b;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 350px;
+            max-width: 480px;
         }
-        h1 {
-            color: #38bdf8;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #94a3b8;
-            font-size: 14px;
+
+        .header {
+            text-align: center;
             margin-bottom: 20px;
         }
-        button {
-            background-color: #38bdf8;
-            color: #0f172a;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
+
+        .header h1 {
+            font-size: 1.4rem;
+            margin: 0 0 8px 0;
+            color: var(--accent-color);
         }
-        button:hover {
-            background-color: #0ea5e9;
+
+        .header p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .progress-container {
+            margin: 16px 0;
+        }
+
+        .progress-bar-bg {
+            background-color: #334155;
+            border-radius: 8px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background-color: var(--accent-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #334155;
+        }
+
+        .channel-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+        }
+
+        .channel-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .badge-done {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Yoha Sub4Sub</h1>
-        <p>እንኳን ወደ ቴሌግራም ሚኒ አፕ በደህና መጡ! 🚀</p>
-        <button onclick="welcomeAction()">הጀምር / Start</button>
+        <div class="header">
+            <h1>Sub4Sub - እኩል እና ፈጣን ሰብስክራይብ</h1>
+            <p>ያለ መቆም በ 20 አባላት እኩል ሂደት</p>
+        </div>
+
+        <!-- Registration View -->
+        <div id="registration-view" class="card">
+            <h2>የቻናል ምዝገባ</h2>
+            <div class="form-group">
+                <label for="channel-name">የቻናልዎ ስም</label>
+                <input type="text" id="channel-name" placeholder="ምሳሌ፡ Ethio Tech">
+            </div>
+            <div class="form-group">
+                <label for="channel-link">የዩቲዩብ ቻናል ሊንክ (Link)</label>
+                <input type="url" id="channel-link" placeholder="https://youtube.com/@yourchannel">
+            </div>
+            <button class="btn" onclick="registerUser()">መዝግብ እና ጀምር</button>
+        </div>
+
+        <!-- Main Task View -->
+        <div id="main-view" class="card hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="batch-title" style="font-weight: bold; color: var(--accent-color);">ስብስብ 1</span>
+                <span id="progress-text" style="font-size: 0.85rem; color: var(--text-secondary);">0 / 20 ተጠናቋል</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div id="progress-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="channel-list">
+                <!-- Dynamic list -->
+            </div>
+        </div>
     </div>
 
     <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        if (tg) tg.expand();
 
-        function welcomeAction() {
-            let user = tg.initDataUnsafe.user;
-            let name = user ? user.first_name : "ተጠቃሚ";
-            alert("ሰላም " + name + "! ሚኒ አፑ በትክክል እየሰራ ነው።");
+        let completedCount = 0;
+        let batchIndex = 1;
+        const batchSize = 20;
+        let activeChannels = [];
+
+        function registerUser() {
+            const name = document.getElementById('channel-name').value;
+            const link = document.getElementById('channel-link').value;
+
+            if (!name || !link) {
+                alert('እባክዎን የቻናልዎን ስም እና ሊንክ ያስገቡ!');
+                return;
+            }
+
+            document.getElementById('registration-view').classList.add('hidden');
+            document.getElementById('main-view').classList.remove('hidden');
+
+            loadNextBatch();
+        }
+
+        function loadNextBatch() {
+            completedCount = 0;
+            document.getElementById('batch-title').innerText = `ስብስብ ${batchIndex}`;
+            
+            activeChannels = Array.from({ length: batchSize }, (_, i) => ({
+                id: (batchIndex - 1) * batchSize + i + 1,
+                name: `የዩቲዩብ ቻናል #${(batchIndex - 1) * batchSize + i + 1}`,
+                link: `https://youtube.com`,
+                completed: false
+            }));
+
+            renderChannels();
+        }
+
+        function renderChannels() {
+            const listContainer = document.getElementById('channel-list');
+            listContainer.innerHTML = '';
+
+            activeChannels.forEach((ch, index) => {
+                const item = document.createElement('div');
+                item.className = 'channel-item';
+
+                const isLocked = index > completedCount;
+
+                item.innerHTML = `
+                    <div class="channel-info">
+                        <h3>${ch.name}</h3>
+                        <p>${ch.completed ? 'ተጠናቋል ✅' : (isLocked ? '🔒 ተቆልፏል' : 'ዝግጁ')}</p>
+                    </div>
+                    <div>
+                        ${ch.completed 
+                            ? `<span class="status-badge badge-done">Done ✅</span>`
+                            : `<button class="btn ${isLocked ? '' : 'btn-success'}" 
+                                       style="padding: 6px 12px; font-size: 0.85rem; width: auto;" 
+                                       ${isLocked ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''} 
+                                       onclick="subscribeChannel(${index}, '${ch.link}')">
+                                    ${isLocked ? '🔒 locked' : 'Subscribe'}
+                               </button>`
+                        }
+                    </div>
+                `;
+                listContainer.appendChild(item);
+            });
+
+            updateProgress();
+        }
+
+        function subscribeChannel(index, link) {
+            window.open(link, '_blank');
+
+            activeChannels[index].completed = true;
+            completedCount++;
+
+            renderChannels();
+
+            if (completedCount === batchSize) {
+                setTimeout(() => {
+                    batchIndex++;
+                    alert(`🎉 የስብስብ ${batchIndex - 1} 20 አባላትን ጨርሰዋል! ወደ ስብስብ ${batchIndex} በመሸጋገር ላይ...`);
+                    loadNextBatch();
+                }, 400);
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const percent = (completedCount / batchSize) * 100;
+
+            progressFill.style.width = `${percent}%`;
+            progressText.innerText = `${completedCount} / ${batchSize} ተጠናቋል`;
         }
     </script>
-
 </body>
 </html>
